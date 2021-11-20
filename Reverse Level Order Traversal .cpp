@@ -39,77 +39,40 @@ Constraints:
 1 ≤ N ≤ 10^4
 */
 
-#include <bits/stdc++.h>
-using namespace std;
- 
-/* A binary tree node has data, pointer to left and right children */
-struct node
+vector<int> reverseLevelOrder(Node *root)
 {
-    int data;
-    struct node* left;
-    struct node* right;
-};
- 
-/* Given a binary tree, print its nodes in reverse level order */
-void reverseLevelOrder(node* root)
-{
-    stack <node *> S;
-    queue <node *> Q;
-    Q.push(root);
- 
-    // Do something like normal level order traversal order. Following are the
-    // differences with normal level order traversal
-    // 1) Instead of printing a node, we push the node to stack
-    // 2) Right subtree is visited before left subtree
-    while (Q.empty() == false)
-    {
-        /* Dequeue node and make it root */
-        root = Q.front();
-        Q.pop();
-        S.push(root);
- 
-        /* Enqueue right child */
-        if (root->right)
-            Q.push(root->right); // NOTE: RIGHT CHILD IS ENQUEUED BEFORE LEFT
- 
-        /* Enqueue left child */
-        if (root->left)
-            Q.push(root->left);
+    // code here
+    queue<Node*>q;
+    q.push(root);
+    vector<int>v;
+    while(1)
+    {   
+        stack<int>s;
+        int size=q.size();
+        if(size==0)
+        {
+            break;
+        }
+        while(size--)
+        {
+            Node* n = q.front();
+            s.push(n->data);
+            q.pop();
+            if(n->left)
+            {
+                q.push(n->left);
+            }
+            if(n->right)
+            {
+                q.push(n->right);
+            }
+        }
+        while(!s.empty())
+        {
+            v.push_back(s.top());
+            s.pop();
+        }
     }
- 
-    // Now pop all items from stack one by one and print them
-    while (S.empty() == false)
-    {
-        root = S.top();
-        cout << root->data << " ";
-        S.pop();
-    }
-}
- 
-/* Helper function that allocates a new node with the
-   given data and NULL left and right pointers. */
-node* newNode(int data)
-{
-    node* temp = new node;
-    temp->data = data;
-    temp->left = NULL;
-    temp->right = NULL;
- 
-    return (temp);
-}
- 
-/* Driver program to test above functions*/
-int main()
-{
-    struct node *root = newNode(10);
-    root->left        = newNode(20);
-    root->right       = newNode(30);
-    root->left->left  = newNode(40);
-    root->left->right = newNode(60);
-
- 
-    cout << "Level Order traversal of binary tree is \n";
-    reverseLevelOrder(root);
- 
-    return 0;
+    reverse(v.begin(),v.end());
+    return v;
 }
