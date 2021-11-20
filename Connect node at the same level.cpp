@@ -49,88 +49,34 @@ Constraints:
 
 */
 
-// CPP program to connect nodes
-// at same level using extended
-// pre-order traversal
-#include <bits/stdc++.h>
-#include <iostream>
-using namespace std;
-
-class node {
-public:
-	int data;
-	node* left;
-	node* right;
-	node* nextRight;
-
-	/* Constructor that allocates a new node with the
-	given data and NULL left and right pointers. */
-	node(int data)
-	{
-		this->data = data;
-		this->left = NULL;
-		this->right = NULL;
-		this->nextRight = NULL;
-	}
+class Solution
+{
+    public:
+    //Function to connect nodes at same level.
+    void connect(Node *root)
+    {
+       queue<Node*> q;
+       q.push(root);
+       while(!q.empty())
+       {
+           int sz=q.size();
+          while(sz>0)
+          {
+              Node* curr=q.front();
+              q.pop();
+              sz--;
+              if(sz==0)
+              {
+                  curr->nextRight=NULL;
+              }
+              else
+              {
+                  curr->nextRight=q.front();
+              }
+              if(curr->left) q.push(curr->left);
+              if(curr->right) q.push(curr->right);
+          }
+       }
+    }    
+      
 };
-
-void connectRecur(node* p);
-
-// Sets the nextRight of
-// root and calls connectRecur()
-// for other nodes
-void connect(node* p)
-{
-	// Set the nextRight for root
-	p->nextRight = NULL;
-
-	// Set the next right for rest of the nodes
-	// (other than root)
-	connectRecur(p);
-}
-
-/* Set next right of all descendents of p.
-Assumption: p is a complete binary tree */
-void connectRecur(node* p)
-{
-	// Base case
-	if (!p)
-		return;
-
-	// Set the nextRight pointer for p's left child
-	if (p->left)
-		p->left->nextRight = p->right;
-
-	// Set the nextRight pointer
-	// for p's right child p->nextRight
-	// will be NULL if p is the right
-	// most child at its level
-	if (p->right)
-		p->right->nextRight = (p->nextRight) ? p->nextRight->left : NULL;
-
-	// Set nextRight for other
-	// nodes in pre order fashion
-	connectRecur(p->left);
-	connectRecur(p->right);
-}
-
-/* Driver code*/
-int main()
-{
-
-	/* Constructed binary tree is
-				
-	*/
-	node* root = new node(10);
-	root->left = new node(20);
-	root->right = new node(30);
-	root->left->left = new node(40);
-	root->right->right = new node(60);
-
-
-	// Populates nextRight pointer in all nodes
-	connect(root);
-
-	
-	return 0;
-}
